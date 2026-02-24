@@ -4,6 +4,7 @@
 
 #include "raylib.h"
 #include "vigenere.h"
+#include <string.h>
 
 #if defined(PLATFORM_WEB)
     #include <emscripten/emscripten.h>
@@ -17,18 +18,53 @@ char output[50] = "";
 // 2. Funzione di aggiornamento (chiamata 60 volte al secondo)
 void UpdateDrawFrame() {
     // Eseguiamo la cifratura
+    int keyChar = GetCharPressed();
+
+    // Ciclo while per leggere tutti i caratteri premuti
+    while (keyChar > 0) {
+        // Se è un carattere valido (lettera o spazio)
+        int len = strlen(input);
+        // Controlliamo che ci sia spazio nel buffer (sizeof(input) - 1 per lo zero finale)
+        if (len < (sizeof(input) - 1)) {
+            input[len] = (char)keyChar;
+            input[len + 1] = '\0';
+        }
+        keyChar = GetCharPressed(); // Legge il prossimo carattere
+    }
+
+    // Gestione cancellazione (Il Backspace è un tasto di controllo, non un carattere)
+    if (IsKeyPressed(KEY_BACKSPACE)) {
+        int len = strlen(input);
+        if (len > 0) {
+            input[len - 1] = '\0';
+        }
+    }
+
+    //Calcolo della cifratura
     vigenere_cipher(input, key, output);
 
     BeginDrawing();
         ClearBackground(RAYWHITE);
         
-        DrawText("Cifrario di Vigenere", 50, 20, 30, BLACK);
+        DrawText("Cifrario di Vigenere", 50, 20, 25, BLACK);
+        DrawLine(50, 55, 750, 55, LIGHTGRAY);
 
-        DrawText("Testo in chiaro:", 50, 100, 20, GRAY);
-        DrawText(input, 50, 130, 40, DARKBLUE);
+        DrawText("Testo in chiaro:", 50, 100, 18, GRAY);
+        // Rettangolo per far capire che è un'area di testo
+        DrawRectangleLines(50, 130, 700, 50, DARKBLUE);
+        DrawText(input, 60, 140, 30, DARKBLUE);
 
-        DrawText("Testo cifrato:", 50, 220, 20, GRAY);
+        // Disegna un trattino che lampeggia alla fine del testo
+        if ((((int)(GetTime() * 2) % 2 == 0))) { // Lampeggia ogni 0.5 secondi
+            int textWidth = MeasureText(input, 30);
+            DrawText("_", 65 + textWidth, 140, 30, DARKBLUE);
+        }
+
+        DrawText("Testo cifrato:", 50, 220, 18, GRAY);
         DrawText(output, 50, 250, 40, MAROON);
+
+        // Istruzioni in basso
+        DrawText("Usa BACKSPACE per cancellare", 50, 400, 15, LIGHTGRAY);
 
         DrawText("Link: github.com/EnriKo", 50, 400, 10, LIGHTGRAY);
     EndDrawing();

@@ -55,7 +55,7 @@ void UpdateDrawFrame() {
         DrawText(input, 60, 140, 30, DARKBLUE);
 
         // Disegna un trattino che lampeggia alla fine del testo
-        if ((GetFrames() / 30) % 2 == 0) {
+        if ((GetFramesCounter() / 30) % 2 == 0) {
             int textWidth = MeasureText(input, 30);
             DrawText("_", 65 + textWidth, 140, 30, DARKBLUE);
         }

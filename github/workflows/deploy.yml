@@ -1,0 +1,41 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [ main ]
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Emscripten
+        uses: mymindstorm/setup-emsdk@v12
+
+      - name: Setup Raylib Web
+        run: |
+          # Scarichiamo la versione precompilata di Raylib per WebAssembly
+          wget https://github.com/raysan5/raylib/releases/download/5.0/raylib_webassembly.zip
+          unzip raylib_webassembly.zip
+          mkdir -p include lib
+          cp raylib-5.0_webassembly/include/*.h ./include/
+          cp raylib-5.0_webassembly/lib/*.a ./lib/
+
+      - name: Build Web App
+        run: |
+          # Compiliamo il tuo main.c e vigenere.c in un file index.html
+          emcc main.c vigenere.c -o index.html \
+          -I./include -L./lib -lraylib \
+          -s USE_GLFW=3 -s ASYNCIFY -DPLATFORM_WEB \
+          --shell-file $EMSDK/upstream/emscripten/src/shell_minimal.html
+
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: .
+          branch: gh-pages

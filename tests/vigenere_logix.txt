@@ -1,0 +1,42 @@
+PROGETTO: Cifrario di Vigenère (Versione Multi-Buffer)
+OBIETTIVO: Cifrare stringhe leggendo da un buffer e scrivendo in un altro.
+
+--- LOGICA DI CIFRATURA ---
+FUNZIONE vigenere_cipher(testo_chiaro, chiave, testo_cifrato):
+Inizializza due incidi i per testo_chiaro, j per chiave.
+Calcola la lunghezza della chiave.
+    PER OGNI carattere nel testo_originale:
+        SE il carattere è una lettera:
+            Trova l'offset ASCII adeguato (Maiuscole o Minuscole).
+            Calcola la posizione (0-25) del carattere originale.
+            Calcola la posizione (0-25) della lettera della chiave corrispondente usando l'indice j.
+            NUOVA_POSIZIONE = (posizione_originale + posizione_chiave) MODULO 26.
+            Scrivi il nuovo carattere nel testo_risultato alla posizione corrente.
+            Incrementa l'indice della chiave j.
+        ALTRIMENTI (se è uno spazio o un simbolo):
+            Copia il carattere originale direttamente nel testo_risultato.
+    FINE DEL CICLO: Chiudi la stringa testo_risultato (fondamentale in C!).
+
+--- LOGICA DI DECIFRATURA ---
+FUNZIONE vigenere_decipher(testo_cifrato, chiave, testo_chiaro):
+Inizializza due incidi i per testo_cifrato, j per chiave.
+Calcolo la lunghezza della chiave.
+    PER OGNI carattere nel testo_cifrato:
+        SE il carattere è una lettere:
+            Trova l'offset ASCII adeguato (Maiuscole o Minuscole).
+            Calcola la posizione (0-25) del carattere cifrato.
+            Calcola la posizione (0-25) della lettera della chiave corrispondente usando l'indice j.
+            NUOVA_POSIZIONE = (posizione_originale - posizione_chiave) MODULO 26
+            Scrivi il nuovo carattere nel testo_risultato alla posizione corrente.
+            Incrementa l'indice della chiave j.
+        ALTRIMENTI (se è uno spazio o un simbolo):
+            Copia il carattere originale direttamente nel testo_risultato.
+    FINE DEL CICLO: Chiudi la stringa testo_risultato (fondamentale in C!).      
+
+--- LOGICA DELLA GUI (Loop Infinito) ---
+FINCHÉ la finestra è aperta:
+    Gestisci il focus dei Box (Testo o Chiave) tramite il Mouse.
+    Cattura i tasti premuti e aggiorna i rispettivi array: input_buffer e key_buffer.
+        SE l'utente preme il tasto "CIFRA":
+            Esegui: vigenere_cipher(input_buffer, key_buffer, output_buffer)
+        DISEGNA l'interfaccia e mostra il contenuto di output_buffer.

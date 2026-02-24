@@ -1,0 +1,15 @@
+// SMOKE TEST 
+int main() {
+    char plaintext[] = "Hello, World!";
+    char key[] = "KEY";
+    char ciphertext[50];
+    char deciphertext[50];
+    
+    vigenere_cipher(plaintext, key, ciphertext);
+    printf("Cifrato: %s\n", ciphertext);
+
+    vigenere_decipher(ciphertext, key, deciphertext);
+    printf("Decifrato: %s\n", deciphertext);
+
+    return 0;
+}

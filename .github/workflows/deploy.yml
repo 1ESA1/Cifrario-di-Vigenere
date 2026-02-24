@@ -17,18 +17,22 @@ jobs:
       - name: Setup Emscripten
         uses: mymindstorm/setup-emsdk@v12
 
-      - name: Setup Raylib Web
+      - name: Build Raylib from Source
         run: |
-          # Scarichiamo la versione precompilata di Raylib per WebAssembly
-          wget https://github.com/raysan5/raylib/releases/download/5.0/raylib_webassembly.zip
-          unzip raylib_webassembly.zip
+          # Scarichiamo i sorgenti di Raylib invece del file zip
+          git clone --depth 1 https://github.com/raysan5/raylib.git
+          cd raylib/src
+          # Compiliamo Raylib per il Web (WebAssembly)
+          make PLATFORM=PLATFORM_WEB -e
+          cd ../..
+          # Creiamo le cartelle e spostiamo i file necessari
           mkdir -p include lib
-          cp raylib-5.0_webassembly/include/*.h ./include/
-          cp raylib-5.0_webassembly/lib/*.a ./lib/
+          cp raylib/src/raylib.h ./include/
+          cp raylib/src/libraylib.a ./lib/
 
       - name: Build Web App
         run: |
-          # Compiliamo il tuo main.c e vigenere.c in un file index.html
+          # Compiliamo il tuo progetto usando la libreria appena creata
           emcc main.c vigenere.c -o index.html \
           -I./include -L./lib -lraylib \
           -s USE_GLFW=3 -s ASYNCIFY -DPLATFORM_WEB \

@@ -1,0 +1,10 @@
+# Eseguibili e file oggetto
+vigenere_app
+*.o
+*.exe
+
+# File di sistema Mac
+.DS_Store
+
+# Cartelle di VS Code
+.vscode/

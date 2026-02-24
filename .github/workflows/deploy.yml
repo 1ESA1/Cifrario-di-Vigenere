@@ -25,7 +25,6 @@ jobs:
           cd ../..
           mkdir -p include lib
           cp raylib/src/raylib.h ./include/
-          # Nota: Usiamo il nome corretto generato per il web
           cp raylib/src/libraylib.web.a ./lib/libraylib.a
 
       - name: Build Web App
@@ -33,7 +32,7 @@ jobs:
           emcc main.c vigenere.c -o index.html \
           -I./include -L./lib -lraylib \
           -s USE_GLFW=3 -s ASYNCIFY -DPLATFORM_WEB \
-          --shell-file $EMSDK/upstream/emscripten/src/shell_minimal.html
+          --shell-file raylib/src/shell.html
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4

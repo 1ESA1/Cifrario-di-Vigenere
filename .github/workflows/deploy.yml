@@ -19,20 +19,17 @@ jobs:
 
       - name: Build Raylib from Source
         run: |
-          # Scarichiamo i sorgenti di Raylib invece del file zip
           git clone --depth 1 https://github.com/raysan5/raylib.git
           cd raylib/src
-          # Compiliamo Raylib per il Web (WebAssembly)
           make PLATFORM=PLATFORM_WEB -e
           cd ../..
-          # Creiamo le cartelle e spostiamo i file necessari
           mkdir -p include lib
           cp raylib/src/raylib.h ./include/
-          cp raylib/src/libraylib.a ./lib/
+          # Nota: Usiamo il nome corretto generato per il web
+          cp raylib/src/libraylib.web.a ./lib/libraylib.a
 
       - name: Build Web App
         run: |
-          # Compiliamo il tuo progetto usando la libreria appena creata
           emcc main.c vigenere.c -o index.html \
           -I./include -L./lib -lraylib \
           -s USE_GLFW=3 -s ASYNCIFY -DPLATFORM_WEB \

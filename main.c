@@ -12,7 +12,7 @@
 
 // 1. Variabili Globali (così UpdateDrawFrame può vederle)
 char input[50] = "HELLO WORLD";
-char key[50] = "KEY";
+char key[50] = "SECRET";
 char output[50] = "";
 
 // 2. Funzione di aggiornamento (chiamata 60 volte al secondo)
